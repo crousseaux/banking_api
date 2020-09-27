@@ -19,4 +19,10 @@ class TransferSerializer(serializers.ModelSerializer):
     class Meta:
         fields = '__all__'
         model = models.Transfer
+        depth = 2
 
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = '__all__'
+        model = models.User
