@@ -41,15 +41,15 @@ The browsable api will be available at <a href="http://localhost:8000/wallets" t
 [Test Environment](https://banking-api-case.herokuapp.com/cards/)
 
 ## Usage
-#### ```[GET] /wallets``` 
+#### ```[GET] /wallets/``` 
 Description:  View all wallets  
 **HTTP headers:** none  
 
-#### ```[GET] /wallets/<wallet_id>```
+#### ```[GET] /wallets/<wallet_id>/```
 Description: View a specific wallets  
 **HTTP headers:** none  
 
-#### ```[POST] /wallets``` 
+#### ```[POST] /wallets/``` 
 Description:  Create new wallet  
 **HTTP headers:** specify User-Id and Company-Id (positive integers)  
 **Body:**  
@@ -59,15 +59,15 @@ balance (optional, default 100): how much should be on the wallet when it gets i
 example:  
 ``` { "currency_id": 2, "company_id": 2, "balance": 1000 } ```
 
-#### ```[GET] /cards``` 
+#### ```[GET] /cards/``` 
 Description: View all cards   
 **HTTP headers:** none  
 
-#### ```[GET] /cards/<card_id>``` 
+#### ```[GET] /cards/<card_id>/``` 
 Description: View a specific card  
 **HTTP headers:** none
 
-#### ```[POST] /cards``` 
+#### ```[POST] /cards/``` 
 Description:  Create new card  
 **HTTP headers:** specify User-Id and Company-Id (positive integers)  
 **Body:**  
@@ -77,15 +77,15 @@ balance (optional, default 20): how much should be on the card when it gets inst
 example:  
 ``` { "wallet_id": 5, "currency_id": 1, "user_id": 1 } ```
 
-#### ```[GET] /transfers```
+#### ```[GET] /transfers/```
 Description: View all transfers  
 **HTTP headers:** none  
 
-#### ```[GET] /transfers/<transfer_id>```
+#### ```[GET] /transfers/<transfer_id>/```
 Description: View a specific transfer  
 **HTTP headers:** none  
 
-#### ```[POST] /transfers``` 
+#### ```[POST] /transfers/``` 
 Description:  Create new card  
 **HTTP headers:** specify User-Id and Company-Id (positive integers)  
 **Body:**  
@@ -95,24 +95,24 @@ target_entity_id: entity id to transfer to (entities id can be found in list of 
 example:  
 ``` { "amount": 10, "origin_entity_id": 1, "target_entity_id": 10, "user_id": 1 } ```
 
-#### ```[GET] /users/<user_id>```
+#### ```[GET] /users/<user_id>/```
 Description: View a specific user details  
 **HTTP headers:** none  
 
-#### ```[GET] /users/<user_id>/cards```
+#### ```[GET] /users/<user_id>/cards/```
 Description: View all cards of a specific user  
 **HTTP headers:** none  
 
-#### ```[GET] /users/<user_id>/wallets```
+#### ```[GET] /users/<user_id>/wallets/```
 Description: View all wallets of a specific user  
 **HTTP headers:** none  
 
-#### ```[POST] /cards/<card_id>/block```
+#### ```[POST] /cards/<card_id>/block/```
 Description: block a card 
 **HTTP headers:** specify User-Id and Company-Id (positive integers)    
 **Body:**: empty  
 
-#### ```[POST] /cards/<card_id>/unblock```
+#### ```[POST] /cards/<card_id>/unblock/```
 Description: unblock a card 
 **HTTP headers:** specify User-Id and Company-Id (positive integers)    
 **Body:**: empty  
