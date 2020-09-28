@@ -53,7 +53,7 @@ class Card(BaseModel):
     user = models.ForeignKey(User, on_delete=models.PROTECT)
     status = models.CharField(choices=(('Active', 'Active'), ('Blocked', 'Blocked')), default='Active', max_length=10)
 
-    def save(self, *args, **kwargs):
+    def create(self, *args, **kwargs):
         self.expiration_date = date.today() + timedelta(days=30)
         self.ccv = randint(100, 999)
         self.number = randint(1000000000000000, 9999999999999999)

@@ -6,6 +6,7 @@ from rest_framework import status
 from rest_framework.response import Response
 
 from banking_api.banking_api_app import models
+from banking_api.banking_api_app.models import Card
 from banking_api.banking_api_app.serializers import TransferSerializer
 
 CONVERSION_FEE = decimal.Decimal(0.029)
@@ -48,6 +49,7 @@ def execute_transfer(amount, origin_entity_id, target_entity_id):
     return Response(TransferSerializer(transfer).data, status=status.HTTP_201_CREATED)
 
 
+# helper function to retrieve conversion rates from a given base currency to a target currency using exchange rates api
 def get_currency_conversion(origin_currency, target_currency):
     resp = requests.get('https://api.exchangeratesapi.io/latest', params={'base': origin_currency.code, 'symbols': target_currency.code})
     resp.raise_for_status()
@@ -58,3 +60,24 @@ def get_currency_conversion(origin_currency, target_currency):
 
 def get_master_wallet_for_currency(currency_id):
     return models.Wallet.objects.get(is_master=True, currency=currency_id)
+
+
+def get_card(card_id):
+    return Card.objects.get(id=card_id)
+
+
+def block_card(card_id):
+    card = get_card(card_id)
+    amount = card.balance
+    origin_entity = models.Entity.objects.get(card=card)
+    target_entity = models.Entity.objects.get(wallet=card.wallet)
+    execute_transfer(amount, origin_entity.id, target_entity.id)
+    card = get_card(card_id)
+    card.status = "Blocked"
+    card.save()
+
+
+def unblock_card(card_id):
+    card = get_card(card_id)
+    card.status = "Active"
+    card.save()

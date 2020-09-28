@@ -2,6 +2,7 @@ import decimal
 
 from rest_framework import generics, status
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from banking_api.banking_api_app.services import permission_service, transfer_service
 from .models import *
@@ -98,3 +99,23 @@ class UserWallets(generics.ListAPIView):
             if user_wallets.get(user_card.wallet.id) is None:
                 user_wallets[user_card.wallet.id] = user_card.wallet
         return user_wallets.values()
+
+
+class BlockCard(APIView):
+    def post(self, request, *args, **kwargs):
+        card_id = kwargs['pk']
+        user_id = int(request.headers.get('User-Id'))
+        if not permission_service.has_card(user_id, card_id):
+            return Response({'error': 'Forbidden'}, status=status.HTTP_403_FORBIDDEN)
+        transfer_service.block_card(card_id)
+        return Response({'success': 'Card has been blocked'}, status=status.HTTP_200_OK)
+
+
+class UnblockCard(APIView):
+    def post(self, request, *args, **kwargs):
+        card_id = kwargs['pk']
+        user_id = int(request.headers.get('User-Id'))
+        if not permission_service.has_card(user_id, card_id):
+            return Response({'error': 'Forbidden'}, status=status.HTTP_403_FORBIDDEN)
+        transfer_service.unblock_card(card_id)
+        return Response({'success': 'Card has been unblocked'}, status=status.HTTP_200_OK)
