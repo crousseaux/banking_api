@@ -35,6 +35,8 @@ class TransferList(generics.ListCreateAPIView):
     def create(self, request, *args, **kwargs):
         data = request.data
         amount = data.get('amount')
+        if amount is None or amount < 0:
+            return Response({'error': 'Please provide a positive decimal as the amount'}, status=status.HTTP_400_BAD_REQUEST)
         origin_entity_id = data.get('origin_entity_id')
         target_entity_id = data.get('target_entity_id')
         company_id = int(request.headers.get('Company-Id'))

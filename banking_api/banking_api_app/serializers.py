@@ -4,6 +4,8 @@ from . import models
 
 
 class WalletSerializer(serializers.ModelSerializer):
+    entity = serializers.StringRelatedField(many=True)
+
     class Meta:
         fields = '__all__'
         model = models.Wallet
@@ -11,6 +13,8 @@ class WalletSerializer(serializers.ModelSerializer):
 
 
 class CardSerializer(serializers.ModelSerializer):
+    entity = serializers.StringRelatedField(many=True)
+
     class Meta:
         fields = '__all__'
         model = models.Card

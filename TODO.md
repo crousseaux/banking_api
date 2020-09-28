@@ -1,5 +1,11 @@
-# TODO
-- user authentication
-- permissions
-- expired card -> scheduled job is card expired, transfer dans wallet
+# TODO and further improvements
+- handle user authentication
+- handle permissions
+- handle errors better
+- expired card -> create a scheduled job when a card expires and transfer money into wallet
 - create real user and companies table
+- Add unit tests: happy path and edge cases
+- Add integration test
+- Set up Django for production
+- Add function docstrings  
+- make sure card numbers are not duplicated

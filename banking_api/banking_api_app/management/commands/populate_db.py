@@ -29,6 +29,7 @@ class Command(BaseCommand):
         print('Wallets created')
         create_cards()
         print('Cards created')
+        create_entities()
 
 
 def create_companies():
@@ -100,3 +101,16 @@ def create_cards():
                         expiration_date=card.get('expiration_date'), ccv=card.get('ccv'), user=user)
         cards.append(new_card)
     Card.objects.bulk_create(cards)
+
+
+def create_entities():
+    entities = []
+    cards = Card.objects.all()
+    wallets = Wallet.objects.all()
+    for card in cards:
+        entity = Entity(card=card)
+        entities.append(entity)
+    for wallet in wallets:
+        entity = Entity(wallet=wallet)
+        entities.append(entity)
+    Entity.objects.bulk_create(entities)
