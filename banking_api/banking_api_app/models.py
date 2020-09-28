@@ -1,6 +1,3 @@
-from datetime import timedelta, date
-from random import randint
-
 from django.db import models
 
 
@@ -47,20 +44,11 @@ class Card(BaseModel):
     wallet = models.ForeignKey(Wallet, on_delete=models.PROTECT)
     balance = models.DecimalField(default=10, decimal_places=2, max_digits=15)
     currency = models.ForeignKey(Currency, on_delete=models.PROTECT)
-    number = models.IntegerField(default=100)
+    ccv = models.IntegerField(default=100)
     expiration_date = models.DateField(null=True, blank=True)
-    ccv = models.IntegerField(default=1000000000000000)
+    number = models.IntegerField(default=1000000000000000)
     user = models.ForeignKey(User, on_delete=models.PROTECT)
     status = models.CharField(choices=(('Active', 'Active'), ('Blocked', 'Blocked')), default='Active', max_length=10)
-
-    def create(self, *args, **kwargs):
-        # set expiration date to be a month after creation
-        self.expiration_date = date.today() + timedelta(days=30)
-        # random 3 digits number
-        self.ccv = randint(100, 999)
-        # random 16 digits number
-        self.number = randint(1000000000000000, 9999999999999999)
-        super(Card, self).save(*args, **kwargs)
 
 
 # references a card or a wallet, will be used in transfer to references either a wallet or a card

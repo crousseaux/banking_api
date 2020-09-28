@@ -1,4 +1,6 @@
 import decimal
+from datetime import date, timedelta
+from random import randint
 
 from rest_framework import generics, status
 from rest_framework.response import Response
@@ -62,7 +64,14 @@ class CardList(generics.ListCreateAPIView):
         user_id = int(request.headers.get('User-Id'))
         if not permission_service.is_user(request, user_id):
             return Response({'error': 'Forbidden'}, status=status.HTTP_403_FORBIDDEN)
-        card = Card.objects.create(**request.data)
+        card = Card(**request.data)
+        # set expiration date to be a month after creation
+        card.expiration_date = date.today() + timedelta(days=30)
+        # random 3 digits number
+        card.ccv = randint(100, 999)
+        # random 16 digits number
+        card.number = randint(1000000000000000, 9999999999999999)
+        card.save()
         Entity.objects.create(card=card)
         return Response(CardSerializer(card).data, status=status.HTTP_201_CREATED)
 
