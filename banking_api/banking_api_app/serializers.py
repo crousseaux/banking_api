@@ -7,12 +7,14 @@ class WalletSerializer(serializers.ModelSerializer):
     class Meta:
         fields = '__all__'
         model = models.Wallet
+        depth = 2
 
 
 class CardSerializer(serializers.ModelSerializer):
     class Meta:
         fields = '__all__'
         model = models.Card
+        depth = 2
 
 
 class TransferSerializer(serializers.ModelSerializer):
