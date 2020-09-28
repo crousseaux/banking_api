@@ -25,22 +25,31 @@ def execute_transfer(amount, origin_entity_id, target_entity_id):
         return Response({'error': 'Not enough money in entity'}, status=status.HTTP_400_BAD_REQUEST)
 
     fees = 0
+    # if currencies are different, we apply fees depending on converison rate
     if origin_entity.get_currency().id != target_entity.get_currency().id:
         try:
+            # call to api to retrieve latest exchange rates
             conversion_rate = get_currency_conversion(origin_entity.get_currency(), target_entity.get_currency())
         except HTTPError:
             return Response({'error': 'Unable to get connect to foreign exchange rates API. Please try again.'}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
         if conversion_rate is None:
             return Response({'error': 'Currency not recognized by API, make sure currency code is correct'})
+        # target amount after conversion
         target_amount = amount * decimal.Decimal(conversion_rate)
+        # calculate fees
         fees = target_amount * CONVERSION_FEE
+        # target amount after removing fees
         target_amount -= fees
+        # remove original amount from origin entity
         origin_entity.set_balance(origin_entity.get_balance() - amount)
+        # add amount after conversion and subtracting fees to target entity
         target_entity.set_balance(target_entity.get_balance() + target_amount)
+        # add amount to correct master wallet
         master_wallet = get_master_wallet_for_currency(target_entity.get_currency().id)
         master_wallet.balance += fees
         master_wallet.save()
     else:
+        # in case entities are in same currency, there is no fees
         origin_entity.set_balance(origin_entity.get_balance() - amount)
         target_entity.set_balance(target_entity.get_balance() + amount)
 
@@ -66,6 +75,7 @@ def get_card(card_id):
     return Card.objects.get(id=card_id)
 
 
+# block card: unload money into wallet and creates a transfer record
 def block_card(card_id):
     card = get_card(card_id)
     amount = card.balance
@@ -77,6 +87,7 @@ def block_card(card_id):
     card.save()
 
 
+# unblock card: re-activate the card
 def unblock_card(card_id):
     card = get_card(card_id)
     card.status = "Active"

@@ -106,3 +106,13 @@ Description: View all cards of a specific user
 #### ```[GET] /users/<user_id>/wallets```
 Description: View all wallets of a specific user  
 **HTTP headers:** none  
+
+#### ```[POST] /cards/<card_id>/block```
+Description: block a card 
+**HTTP headers:** specify User-Id and Company-Id (positive integers)    
+**Body:**: empty  
+
+#### ```[POST] /cards/<card_id>/unblock```
+Description: unblock a card 
+**HTTP headers:** specify User-Id and Company-Id (positive integers)    
+**Body:**: empty  

@@ -54,12 +54,16 @@ class Card(BaseModel):
     status = models.CharField(choices=(('Active', 'Active'), ('Blocked', 'Blocked')), default='Active', max_length=10)
 
     def create(self, *args, **kwargs):
+        # set expiration date to be a month after creation
         self.expiration_date = date.today() + timedelta(days=30)
+        # random 3 digits number
         self.ccv = randint(100, 999)
+        # random 16 digits number
         self.number = randint(1000000000000000, 9999999999999999)
         super(Card, self).save(*args, **kwargs)
 
 
+# references a card or a wallet, will be used in transfer to references either a wallet or a card
 class Entity(BaseModel):
     card = models.ForeignKey(Card, on_delete=models.CASCADE, blank=True, null=True, related_name='entity')
     wallet = models.ForeignKey(Wallet, on_delete=models.CASCADE, blank=True, null=True, related_name='entity')
@@ -67,18 +71,21 @@ class Entity(BaseModel):
     class Meta:
         verbose_name_plural = "Entities"
 
+    # get currency from related wallet or card
     def get_currency(self):
         if self.card is not None:
             return self.card.currency
         else:
             return self.wallet.currency
 
+    # get balance from related wallet or card
     def get_balance(self):
         if self.card is not None:
             return self.card.balance
         else:
             return self.wallet.balance
 
+    # set balance from related wallet or card
     def set_balance(self, new_balance):
         if self.card is not None:
             self.card.balance = new_balance
